@@ -120,19 +120,21 @@ fn test_fmt_detail() {
 //--- форматированный вывод list с помощью display
 //--- https://doc.rust-lang.ru/stable/rust-by-example/hello/print/print_display/testcase_list.html
 
-// Определяем структуру с именем `List`, которая хранит в себе `Vec`.
-struct List(Vec<i32>);
+// Определяем структуру с `List`, которая хранит в себе `Vec` и строку как кортеж ()
+struct List(Vec<i32>, String);
 
 impl fmt::Display for List {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Получаем значение с помощью индекса кортежа
         // и создаём ссылку на `vec`.
-        let vec = &self.0;
+        let vec = &self.0;  //--- 0 индекс
+        let st = &self.1;   //--- 1 индекс
 
-        write!(f, "[")?;
+        //--- Выведем строку из позиции 1 кортежа
+        write!(f, "{} [", st)?;
 
-        // Пройдёмся по каждому `v` в `vec`.
-        // Номер итерации хранится в `count`.
+        // Пройдёмся по каждому `v` в `vec`
+        // Номер итерации хранится в `count`
         for (count, v) in vec.iter().enumerate() {
             // Для каждого элемента, кроме первого, добавим запятую
             // до вызова `write!`. Используем оператор `?` или `try!`,
@@ -142,7 +144,7 @@ impl fmt::Display for List {
         }
 
         // Закроем открытую скобку и вернём значение `fmt::Result`
-        write!(f, "]")
+        write!(f, "]")        
     }
 }
 
@@ -154,11 +156,11 @@ fn test_fmt_list() {
 	println!("Работа по тексту туториала:\n");
 	
 	//--- так
-    let v = List(vec![1, 2, 3, 4, 5, 6, 7, 8]);
+    let v = List(vec![1, 2, 3, 4, 5, 6, 7, 8], "First_list".to_string());
     println!("{}", v);
 
 	//--- или так
-    println!("{}", List(vec![4, 6, 7, 2, 5, 8]));    
+    println!("{}", List(vec![4, 6, 7, 2, 5, 8], "Second_list".to_string()));    
 }
 //================================================================================================
 
@@ -173,7 +175,7 @@ struct MinMax(i64, i64);
 // Реализуем `Display` для `MinMax`.
 impl fmt::Display for MinMax {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    	// Используем `self.номер`, чтобы получить доступ к каждому полю структуры.
+    	// Используем `self.index`, чтобы получить доступ к каждому полю структуры.
     	write!(f, "({}, {})", self.0, self.1)
     }	
 }
@@ -317,7 +319,6 @@ fn test_fmt_out() {
 	println!("\n<<< простой форматированный вывод >>>");
 	println!("https://doc.rust-lang.ru/stable/rust-by-example/hello/print.html\n");
 
-
     println!("format!   записывает форматированный текст в String.");
     println!("print!    работает аналогично с format!, но текст выводится в консоль (io::stdout).");
     println!("println!  аналогично print!, но в конце добавляется переход на новую строку.");
@@ -386,6 +387,173 @@ fn are_you_on_linux() {
 
 //================================================================================================
 
+//--- Rust By Example -> С-подобные enum
+//--- https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum/c_like.html
+
+// enum с неявным дискриминатором (начинается с 0)
+enum Number {
+    Zero,
+    One,
+    Two,
+}
+
+// enum с явным дискриминатором
+enum Clr {
+    Red = 0xff0000,
+    Green = 0x00ff00,
+    Blue = 0x0000ff,
+}
+
+// Функция, которая получает на вход `WebEvent` и ничего не возвращает.
+fn out_test_enum_C() {
+    println!("\n<<< Working: out_test_enum_C() >>>");
+    println!("https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum/c_like.html\n");
+
+    // `enums` может быть преобразован в целочисленное значение.
+    println!("нулевой элемент {}", Number::Zero as i32);
+    println!("первый элемент {}", Number::One as i32);
+
+    println!("красный цвет #{:06x}", Clr::Red as i32);
+    println!("голубой цвет #{:06x}", Clr::Blue as i32);
+}
+
+//================================================================================================
+
+//--- Rust By Example -> enum
+//--- https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum.html
+
+// Создаём `enum` для классификации web-событий. Обратите внимание,
+// как имена и информация о типе определяют вариант:
+// `PageLoad != PageUnload` и `KeyPress(char) != Paste(String)`.
+// Все они разные и независимые.
+enum WebEvent {
+    // `enum` может быть как `unit-подобным`,
+    PageLoad,
+    PageUnload,
+    // так и кортежной структурой,
+    KeyPress(char),
+    Paste(String),
+    // или С-подобной структурой.
+    Click { x: i64, y: i64 },
+}
+
+// Функция, которая получает на вход `WebEvent` и ничего не возвращает.
+fn inspect(event: WebEvent) {
+    match event {
+        WebEvent::PageLoad => println!("страница загружена"),
+        WebEvent::PageUnload => println!("страница выгружена"),
+        // Извлечём `c` из `enum`.
+        WebEvent::KeyPress(c) => println!("нажата '{}'.", c),
+        WebEvent::Paste(s) => println!("нажата \"{}\".", s),
+        // Разберём `Click` на `x` и `y`.
+        WebEvent::Click { x, y } => {
+            println!("кликнуто на x={}, y={}.", x, y);
+        },
+    }
+}
+
+fn test_enum_webevent() {
+    println!("\n<<< Working: test_enum_webevent() >>>");
+    println!("https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum.html\n");
+
+    let pressed = WebEvent::KeyPress('x');
+    // `to_owned()` создаст `String` из строкового среза.
+    let pasted  = WebEvent::Paste("мой текст".to_owned());
+    let click   = WebEvent::Click { x: 20, y: 80 };
+    let load    = WebEvent::PageLoad;
+    let unload  = WebEvent::PageUnload;
+
+    inspect(pressed);
+    inspect(pasted);
+    inspect(click);
+    inspect(load);
+    inspect(unload);
+}
+
+//================================================================================================
+
+//--- Rust By Example -> Связный список List
+//--- https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum/testcase_linked_list.html
+
+use eList::*;
+
+enum eList {
+    // Cons: Кортежная структура, которая хранит 
+    // (элемент, и указатель на следующий узел)
+    Cons(u32, Box<eList>),
+    // Nil: Узел, обозначающий конец связанного списка
+    Nil,
+}
+
+// Методы могут быть присоединены к перечислению
+impl eList {
+    // Создаём пустой список
+    fn new() -> eList {
+        // `Nil` имеет тип `List`
+        Nil
+    }
+
+    // Функция, которая принимает список и возвращает тот же список,
+    // но с новым элементом в начале
+    fn prepend(self, elem: u32) -> eList {
+        // `Cons` также имеет тип `eList`
+        Cons(elem, Box::new(self))
+    }
+
+    // Возвращаем длину списка
+    fn len(&self) -> u32 {
+        // `self` должен быть сопоставлен (проверен на соответствие),
+        // поскольку поведение этого метода зависит от варианта `self`
+        // `self` имеет тип `&eList`, а `*self` имеет тип `eList`, сопоставление на
+        // конкретном типе `T` предпочтительнее, чем сопоставление по ссылке `&T`
+        match *self {
+            // Мы не можем завладеть `tail`, т.к. `self` заимствован;
+            // вместо этого возьмём ссылку на `tail`
+            Cons(_, ref tail) => 1 + tail.len(),
+            // Базовый случай: Пустой список имеет нулевую длину
+            Nil => 0
+        }
+    }
+
+    // Возвращаем представление списка в виде (размещённой в куче) строки
+    fn stringify(&self) -> String {
+        match *self {
+            Cons(head, ref tail) => {
+                // `format!` похож на `print!`, но возвращает строку
+                // размещённую в куче, вместо вывода на консоль
+                format!("{}, {}", head, tail.stringify())
+            },
+            Nil => {
+                format!("Nil")
+            },
+        }
+    }
+}
+
+
+fn test_elist() {
+
+    println!("\n<<< Working: test_elist() >>>");
+    println!("https://doc.rust-lang.ru/stable/rust-by-example/custom_types/enum/testcase_linked_list.html\n");
+
+    // Создаём пустой связанный список
+    let mut list = eList::new();
+
+    // Присоединяем несколько элементов
+    list = list.prepend(1);
+    list = list.prepend(2);
+    list = list.prepend(3);
+
+    // Отображаем окончательное состояние списка
+    println!("размер связанного списка: {}", list.len());
+    println!("{}", list.stringify());
+
+}
+
+
+//================================================================================================
+
+
 fn title() {
 	println!("\n==========================================================");
 	println!("<<< Набор тестовых программ туториала: >>>");
@@ -419,8 +587,11 @@ fn main() {
     test_fmt_display();
     test_fmt_list(); 
     test_fmt_detail();
+
     
-	test_literals();    
-    
+	test_literals(); 
+    out_test_enum_C();
+    test_enum_webevent();
+    test_elist();  
  
 }    
