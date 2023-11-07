@@ -1,0 +1,39 @@
+NAME              MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+
+fd0                 2:0    1     4K  0 disk  
+
+sda                 8:0    0 931,5G  0 disk  /SSD disk with Mint
+├─sda1              8:1    0   512M  0 part  /boot/efi
+├─sda2              8:2    0     1K  0 part  
+└─sda5              8:5    0   931G  0 part  
+  ├─vgmint-root   253:0    0 930,1G  0 lvm   /
+  └─vgmint-swap_1 253:1    0   976M  0 lvm   [SWAP]
+
+sdb                 8:16   0 931,5G  0 disk  /disk added from other computer (empty)  
+
+//--- RAID -------------------------------------------------------------------------
+sdc                 8:32   0   2,7T  0 disk  
+├─sdc1              8:33   0 976,6G  0 part  
+│ └─md126           9:126  0 976,4G  0 raid1 
+│   └─vg1-lv1     253:3    0   250G  0 lvm   /~/work
+└─sdc2              8:34   0   1,8T  0 part  
+  └─md127           9:127  0   1,8T  0 raid1 
+    └─vg2-lv1     253:2    0   250G  0 lvm   /~/virt
+
+sdd                 8:48   0   2,7T  0 disk  
+├─sdd1              8:49   0 976,6G  0 part  
+│ └─md126           9:126  0 976,4G  0 raid1 
+│   └─vg1-lv1     253:3    0   250G  0 lvm   /~/work
+└─sdd2              8:50   0   1,8T  0 part  
+  └─md127           9:127  0   1,8T  0 raid1 
+    └─vg2-lv1     253:2    0   250G  0 lvm   /~/virt
+//----------------------------------------------------------------------------------
+
+sde                 8:64   0 931,5G  0 disk  /disk added from other computer
+├─sde1              8:65   0   100M  0 part  /reserv
+├─sde2              8:66   0 138,9G  0 part  /ntfs C:
+├─sde3              8:67   0 233,8G  0 part  /ntfs D:
+└─sde4              8:68   0 558,8G  0 part  /ntfs E:
+
+sdf                 8:80   0 698,7G  0 disk  /disk extern connected on USB
+└─sdf1              8:81   0 698,6G  0 part  /media/leon/Elements

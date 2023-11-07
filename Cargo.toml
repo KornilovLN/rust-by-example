@@ -6,3 +6,27 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4.20"
+
+num_cpus = {version = "1.16.0"}
+
+ansi_term = "0.12"
+
+termion = "*"
+
+chrono = "0.4"
+datetime = "0.5.2"
+
+serde_json = {version="1.0.99"}
+serde = {version="1.0.99", features=["derive"]}
+
+rand = { version = "0.8.5", features = [] }
+rand_distr = "0.4.3"
+
+sort = "0.8.5"
+
+tar = "0.4.40"
+flate2 = "1.0.28"
+
+
+
