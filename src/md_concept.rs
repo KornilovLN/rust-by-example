@@ -1,8 +1,8 @@
 use std::fs::File;
-use std::io::{Write, BufReader, BufRead, Error};
+use std::io::{BufReader, BufRead, Error};
 
-//const PATH_CONCEPT: &str = "all/concept/concept.txt";
-const PATH_CONCEPT: &str = "../../all/concept/concept.txt";
+const PATH_CONCEPT: &str = "all/concept/concept.txt";
+//const PATH_CONCEPT: &str = "../../all/concept/concept.txt";
 
 pub fn read_concept() -> Result<(), Error> {
     let path = PATH_CONCEPT;

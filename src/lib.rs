@@ -21,6 +21,10 @@ mod md_string_ex;
 mod md_closure;
 mod md_template;
 mod md_prime;
+mod md_tables;
+mod md_algo;
+mod md_azbuka;
+mod md_turtle;
 
 mod md_life;
 
@@ -28,14 +32,16 @@ mod md_life;
 //================================================================================================
 
 fn prepare_run() {
+
     //--- Информация о процессоре
     md_utils::iron();
 
     //--- Заголовок программы
     md_about::target("rust_by_example", "CLI: Учебно-исследовательская программа");
-    println!("\t--- about.json ----------------------------------------------------------");
+
+    md_utils::title_into_line("about.json", "-", 84);
     md_about::get_json_from_file();
-    println!("\t-------------------------------------------------------------------------\n");
+    md_utils::line_char("-", 84);
 
     //--- Подробно о программе из файла concept
     let reading_file_result = md_concept::read_concept();
@@ -43,25 +49,36 @@ fn prepare_run() {
         Ok(file) => file,
         Err(error) => {
             let frm_err = format!("{}: {}",
-                                  Colour::Red
-                                  .paint("Problem opening the file 'concept.txt'".to_string()),
-                                          Colour::Yellow.paint(error.to_string())
-            );
+                Colour::Red.paint("Проблема открытия 'concept.txt'".to_string()),    
+                Colour::Yellow.paint(error.to_string()) );
             panic!("{}",frm_err);
         },
     };
-
+/*    fn concept_info() {
+        let reading_file_result: Result<(), io::Error> = md_concept::read_concept();
+        let _file_result = match reading_file_result {
+            Ok(file) => file,
+            Err(error) => {
+                let frm_err = format!("{}: {}",
+                                    Colour::Red.paint("Проблема открытия 'concept.txt'".to_string()),
+                                    Colour::Yellow.paint(error.to_string())
+                );
+                panic!("{}",frm_err);
+            },
+        };
+    }
+*/
     md_utils::waiter(5);    //--- пауза
 }
 
 //----------------------------------------------------------------------------------------
 
-fn edit_about(about: &mut md_about::StAbout) {
-    println!("\n\t--- Редактируем  edit_about(about: &mut md_about::StAbout) ------------");
+fn edit_about(about: &mut md_about::StAbout) {    
+    println!("\n\t--- Редактируем  edit_about(about: &mut md_about::StAbout) ---------------------");
     about.datetime = String::from("28.09.2023 23:46:00");
     about.firstname = String::from("Leon");
     about.secondname = String::from("Nicolaevich");
-    println!("\t-------------------------------------------------------------------------");
+    println!("\t----------------------------------------------------------------------------------");
 }
 
 fn save_about(about: &mut md_about::StAbout) {
@@ -86,18 +103,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     loop {
         select_work();
 
-        /*
-    // Read in input.
-    let mut buffer = String::new();
-    let stdin = io::stdin();
-    while stdin.read_line(&mut buffer).is_ok() {
-        // Trim end.
-        let trimmed = buffer.trim_end();
-        println!("You typed: [{trimmed}]");
-        buffer.clear();
-    }
-        */
-
         let mut work_num_str= String::new();
         io::stdin()
             .read_line(&mut work_num_str)
@@ -111,20 +116,20 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         work_num_str.clear();
 
         let res_menu = match work_num {
-            1 => { md_utils::title_with_border("md_format в работе");
+            1 => { md_utils::title_with_border("md_format: в работе");
                 md_format::test_fmt_out();
                 md_format::test_fmt_debug();
                 md_format::test_fmt_display();
                 md_format::test_fmt_list();
                 md_format::test_fmt_detail();
             },
-            2 => { md_utils::title_with_border("md_structures в работе");
+            2 => { md_utils::title_with_border("md_structures: в работе");
                 md_structures::test_literals();
                 md_structures::out_test_enum_c();
                 md_structures::test_enum_webevent();
                 md_structures::test_elist();
             },
-            3 => { md_utils::title_with_border("md_random   в   работе");
+            3 => { md_utils::title_with_border("md_random:   в   работе");
                 md_random::simple_rand();
                 md_random::range_rand();
                 md_random::distrib_rand();
@@ -132,35 +137,55 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                 md_random::show_pwd_rand(16);
                 md_random::show_pwd_by_set_rand(32);
             },
-            4 => { md_utils::title_with_border("md_sort    в    работе");
+            4 => { md_utils::title_with_border("md_sort:    в    работе");
                 md_sort::sort_float_vector();
                 md_sort::sort_vector_structures();
                 md_sort_benchmark::test_all_sort_methods();
             },
-            5 => { md_utils::title_with_border("md_find    в    работе");
+            5 => { md_utils::title_with_border("md_find:    в    работе");
                 md_find::find_time();
                 md_find::find_all_time();
                 md_arch::tar_pack();
             },
-            6 => { md_utils::title_with_border("md_string_ex  в работе");
+            6 => { md_utils::title_with_border("md_string_ex:  в работе");
                 md_string_ex::string_tutor();
                 md_string_ex::array_tutor();
             },
-            7 => { md_utils::title_with_border("md_closure   в  работе");
+            7 => { md_utils::title_with_border("md_closure:   в  работе");
                 md_closure::string_tutor();
                 md_closure::vector_generator_and_closure();
                 md_closure::sin_table();
             },
-            8 => { md_utils::title_with_border("Other modules в работе");
+            8 => { md_utils::title_with_border("md_template: Other modules в работе");
                 md_template::sin_table();
             },
             9 => {
-                md_utils::title_with_border("Игра Life по правилам Конвея (cicle times 250)");
+                md_utils::title_with_border("md_life: Игра Life по правилам Конвея (cicle times 250)");
                 md_life::go();
             },
             10 => {
-                md_utils::title_with_border("Поиск пар простых чисел на интервале 0..10000");
-                md_prime::find_twin_primes_go();
+                md_utils::title_with_border("md_prime: Поиск пар простых чисел на интервале 0..10000");
+                md_prime::find_twin_primes_go(1000);
+            },
+            11 => {
+                md_utils::title_with_border("md_tables: Тестирование табличного вывода структур");
+                md_tables::table_test();
+            },
+            12 => {
+                md_utils::title_with_border("md_algo: Тестирование аппроксимации числа ПИ");
+                md_algo::test_approx_pi_value();
+            },
+            13 => {    
+                md_utils::title_with_border("md_algo: Аппроксимация числа ПИ рациональной дробью");
+                md_algo::test_approx_pi_ratio();
+            },
+            14 => {
+                md_utils::title_with_border("md_azbuka: Тестирование вывода в консоль нескольких алфавитов");
+                md_azbuka::azbuka_go();
+            },
+            15 => {
+                md_utils::title_with_border("md_turtle: Тестирование черепашьей графики");
+                md_turtle::simple_go();
             },
 
             0 => { print!("\n{}", "Конец работы");
@@ -186,6 +211,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+
 
 fn select_work() {
     println!();
@@ -223,7 +249,12 @@ fn select_work() {
         md_closure::sin_table();");
     println!("8 =>\tmd_template::sin_table();");
     println!("9 =>\tmd_life::go();");
-    println!("10=>\tmd_prime::find_twin_primes_go();");
+    println!("10=>\tmd_prime::find_twin_primes_go(quantity);");
+    println!("11=>\tmd_tables::table_test();");
+    println!("12=>\tmd_algo::test_approx_pi_value(); Тестирование аппроксимации числа ПИ");
+    println!("13=>\tmd_algo::test_approx_pi_ratio(); Аппроксимация числа ПИ рациональной дробью");
+    println!("14=>\tmd_azbuka::azbuka_go();");
+    println!("15=>\tmd_turtle::simple_go();");
 
     println!("\n0 =>\tКонец работы");
 
@@ -231,6 +262,6 @@ fn select_work() {
 
     let frmprompt = format!("{} ", Colour::Yellow
                                             .bold()
-                                            .paint("Выберите номер функцию для работы:"));
+                                            .paint("Выберите номер функции для работы:"));
     println!("{}", frmprompt);
 }

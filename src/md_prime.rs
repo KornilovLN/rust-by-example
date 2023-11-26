@@ -1,3 +1,7 @@
+use std::time::{Duration, Instant};
+
+extern crate ansi_term;
+use ansi_term::Colour;
 
 fn is_prime(n: u32) -> bool {
     if n <= 1 {
@@ -42,11 +46,17 @@ pub fn out_vec(dt: Vec<(u32, u32)>, prompt: &str){
 
 //--- Близкие пары простых чисел на интервале от 0 до 1000:
 //--- test ChatGPT
-pub fn find_twin_primes_go() {
+pub fn find_twin_primes_go(quantity: u32) {
     let start = 1;
-    let end = 10000;
+    let end = quantity;
+
+    let beg = Instant::now();
     let twin_primes = find_twin_primes(start, end);
-    //println!("Близкие пары простых чисел на интервале от {} до {}: {:?}", start, end, twin_primes);
+    let duration = beg.elapsed();
+
     println!("\n<<< md_prime: Близкие пары простых чисел на интервале от {} до {} >>>", start, end);
     out_vec(twin_primes, "");
+
+    println!("\nTime elapsed is: {}", Colour::Yellow.paint(format!("{:?}", duration )));
 }
+

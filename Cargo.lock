@@ -476,6 +476,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "turtle-graphics"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b9a89f63142725c0f6ffdb6c5efa33437bacf76f049572a7f6beec2e829727cd"
+
+[[package]]
 name = "tutor"
 version = "0.1.0"
 dependencies = [
@@ -492,7 +498,15 @@ dependencies = [
  "sort",
  "tar",
  "termion",
+ "turtle-graphics",
+ "unic-char-range",
 ]
+
+[[package]]
+name = "unic-char-range"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0398022d5f700414f6b899e10b8348231abf9173fa93144cbc1a43b9793c1fbc"
 
 [[package]]
 name = "unicode-ident"

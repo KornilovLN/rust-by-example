@@ -27,8 +27,8 @@ use std::fs;
 
 mod md_utils;
 
-const PATH_ABOUT: &str = "../../all/config/about.json";
-//const PATH_ABOUT: &str = "all/config/about.json";
+//const PATH_ABOUT: &str = "../../all/config/about.json";
+const PATH_ABOUT: &str = "all/config/about.json";
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct StAbout {
@@ -99,11 +99,12 @@ pub fn get_json_from_file() {
 
 pub fn target(prj_name: &str, text: &str) {
     let dttm = md_utils::get_date_time();
-    println!("\t--- О программе ---------------------------------------------------------");
+
+    md_utils::title_into_line("О программе", "-", 84);    
     println!("\t{}", Colour::Yellow.paint(prj_name));
     println!("\t{}", Colour::Yellow.paint(text));
     println!("\t{}", Colour::Yellow.paint(dttm));
-    println!("\t-------------------------------------------------------------------------");
+    md_utils::line_char("-", 84);
 }
 
 //===================================================================================

@@ -12,7 +12,6 @@
 use std::fs::File;
 
 use std::io;
-//use std::io::prelude::*;
 use std::io::Write;
 
 extern crate num_cpus;
@@ -58,9 +57,30 @@ pub fn title_with_border(text: &str) {
     print_line_char(&frm_ch, len);
 }
 
+///--- print simple line
+pub fn line_char(ch: &str, len: i32) {
+    print!("\t");
+    for i in 0..len-1 {
+        print!("{}",ch);
+    }
+    println!();
+}
+
+//--- text - some title;
+//--- ch - simbol line;
+//--- len - lenght title-line 
+pub fn title_into_line(text: &str, ch: &str, len: i32) {
+    let mut text_len = text.chars().count() as i32;
+    text_len += 3+1+1;                       //--- ZB: "--- text --------------------"
+    let line_len = len - text_len - 1;  //---               ^__________________^    
+    let res_stroka = format!("\t{}{}{}{}{} ",ch,ch,ch," ",text);
+    print!("{}",res_stroka);
+    print_line_char(ch, line_len);
+} 
+
 //-----------------------------------------------------------------------------
 
-/// --- Получить информацию о железе
+// --- Получить информацию о железе
 pub fn get_num_cpus() -> usize {
 	num_cpus::get()
 }
@@ -68,22 +88,23 @@ pub fn get_num_cpus() -> usize {
 pub fn iron() {
     let frm_num_cpus = format!("{}: {}", 
         Colour::Green.paint("Количество ядер процессора: ".to_string()),
-        Colour::Yellow.paint(&get_num_cpus().to_string()));                                              
-    println!("\t{}", "--- Информация о железе --------------------------------------------------");
+        Colour::Yellow.paint(&get_num_cpus().to_string()));
+    
+    title_into_line("Информация о железе", "-", 84);                                                       
     println!("\t{}", frm_num_cpus);
-    println!("\t{}", "-------------------------------------------------------------------------\n");
+    line_char("-", 84);   
 }
 
-/// --- Получить текущий timestamp
+// --- Получить текущий timestamp
 pub fn get_timestamp() -> i64 {
 	let dt = Utc::now();
 	let timestamp: i64 = dt.timestamp_micros();	
 	timestamp		
 }
 
-/// --- Взять текущее значение Utc и возвратить дату и время
-/// --- Применять примерно так:
-/// --- println!("\t{}",Colour::Yellow.paint(dttm));
+// --- Взять текущее значение Utc и возвратить дату и время
+// --- Применять примерно так:
+// --- println!("\t{}",Colour::Yellow.paint(dttm));
 pub fn get_date_time() -> String {
 	let now = Utc::now();
 	let (is_common_era, year) = now.year_ce();	
@@ -103,19 +124,19 @@ pub fn get_date_time() -> String {
     )
 }
 
-/// --- Задержка
+// --- Задержка
 pub fn waiter(pause: u64) {
 	thread::sleep(time::Duration::from_secs(pause));
 }
 
-/// --- Запись в файл
+// --- Запись в файл
 pub fn write_out(f: String, st: &str) -> io::Result<()> {
 	let mut out = File::create(f)?;
 	write!(out,"{}",st)?;
 	Ok(())
 } 
 
-/// --- Ввод с терминала с выводом подсказки commentn
+// --- Ввод с терминала с выводом подсказки commentn
 pub fn read_string(comment:&str) -> String {
     print!("{}", comment);
     let _ = io::stdout().flush();
